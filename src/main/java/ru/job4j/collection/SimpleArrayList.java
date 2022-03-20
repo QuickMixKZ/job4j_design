@@ -30,8 +30,9 @@ public class SimpleArrayList<T> implements List<T> {
     public T set(int index, T newValue) {
         Objects.checkIndex(index, size);
         modCount++;
+        T oldValue = get(index);
         container[index]  = newValue;
-        return get(index);
+        return oldValue;
     }
 
     @Override
