@@ -23,7 +23,7 @@ public class SimpleSetTest {
     }
 
     @Test
-    public void whenContainsAddedElement(){
+    public void whenContainsAddedElement() {
         Set<Integer> set = new SimpleSet<>();
         assertTrue(set.add(1));
         assertTrue(set.add(2));
@@ -31,7 +31,7 @@ public class SimpleSetTest {
     }
 
     @Test
-    public void whenNotContainsElement(){
+    public void whenNotContainsElement() {
         Set<Integer> set = new SimpleSet<>();
         assertTrue(set.add(1));
         assertTrue(set.add(2));
