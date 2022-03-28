@@ -43,31 +43,30 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     private void expand() {
         capacity *= 2;
-        table = Arrays.copyOf(table, capacity);
-    }
-
-    private int getIndex(int hash) {
-        int index = -1;
-        for (int i = 0; i < capacity; i++) {
-            if (table[i] != null && hash(table[i].key) == hash) {
-                index = i;
-                break;
+        MapEntry<K, V>[] newTable = new MapEntry[capacity];
+        for (MapEntry<K, V> kvMapEntry : table) {
+            if (kvMapEntry != null) {
+                newTable[indexFor(hash(kvMapEntry.key))] = kvMapEntry;
             }
         }
-        return index;
+        table = newTable;
     }
 
     @Override
     public V get(K key) {
-        int index = getIndex(hash(key));
-        return index != -1 ? table[index].value : null;
+        int index = indexFor(hash(key));
+        V result = null;
+        if (table[index] != null && table[index].key == key) {
+            result = table[index].value;
+        }
+        return result;
     }
 
     @Override
     public boolean remove(K key) {
         modCount++;
-        int index = getIndex(hash(key));
-        boolean result = index != -1;
+        int index = indexFor(hash(key));
+        boolean result = table[index] != null && table[index].key == key;
         if (result) {
             MapEntry<K, V> entry = table[index];
             entry.key = null;
@@ -90,13 +89,26 @@ public class SimpleMap<K, V> implements Map<K, V> {
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                return index < count;
+                boolean result = false;
+                for (int i = index; i < capacity; i++) {
+                    if (table[i] != null) {
+                        result = true;
+                        break;
+                    }
+                }
+                return result;
             }
 
             @Override
             public K next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
+                }
+                for (int i = index; i < capacity; i++) {
+                    if (table[i] != null) {
+                        index = i;
+                        break;
+                    }
                 }
                 return table[index++].key;
             }

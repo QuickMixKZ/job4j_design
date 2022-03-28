@@ -14,6 +14,13 @@ public class SimpleMapTest {
         SimpleMap<String, Integer> map = new SimpleMap<>();
         assertTrue(map.put("user1", 1));
         assertTrue(map.put("user2", 2));
+        assertTrue(map.put("user3", 3));
+        assertTrue(map.put("user4", 4));
+        assertTrue(map.put("user5", 5));
+        assertTrue(map.put("user6", 6));
+        assertTrue(map.put("user7", 7));
+        assertTrue(map.put("user8", 8));
+        assertTrue(map.put("user9", 9));
     }
 
     @Test
