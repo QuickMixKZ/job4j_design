@@ -1,9 +1,6 @@
 package ru.job4j.collection.map;
 
-import java.util.Arrays;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class SimpleMap<K, V> implements Map<K, V> {
 
@@ -19,7 +16,6 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean put(K key, V value) {
-        modCount++;
         if ((float) (count / capacity) >= LOAD_FACTOR) {
             expand();
         }
@@ -28,6 +24,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
         if (result) {
             table[index] = new MapEntry<>(key, value);
             count++;
+            modCount++;
        }
        return result;
     }
@@ -56,7 +53,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
     public V get(K key) {
         int index = indexFor(hash(key));
         V result = null;
-        if (table[index] != null && table[index].key == key) {
+        if (table[index] != null && Objects.equals(table[index].key, key)) {
             result = table[index].value;
         }
         return result;
@@ -64,15 +61,15 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean remove(K key) {
-        modCount++;
         int index = indexFor(hash(key));
-        boolean result = table[index] != null && table[index].key == key;
+        boolean result = table[index] != null && Objects.equals(table[index].key, key);
         if (result) {
             MapEntry<K, V> entry = table[index];
             entry.key = null;
             entry.value = null;
             table[index] = null;
             count--;
+            modCount++;
         }
         return result;
     }
@@ -89,26 +86,16 @@ public class SimpleMap<K, V> implements Map<K, V> {
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                boolean result = false;
-                for (int i = index; i < capacity; i++) {
-                    if (table[i] != null) {
-                        result = true;
-                        break;
-                    }
+                while (index < table.length && table[index] == null) {
+                    index++;
                 }
-                return result;
+                return index < table.length && table[index] != null;
             }
 
             @Override
             public K next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
-                }
-                for (int i = index; i < capacity; i++) {
-                    if (table[i] != null) {
-                        index = i;
-                        break;
-                    }
                 }
                 return table[index++].key;
             }
