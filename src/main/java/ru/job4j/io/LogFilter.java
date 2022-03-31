@@ -9,8 +9,8 @@ public class LogFilter {
     public List<String> filter(String file) {
         List<String> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            Pattern pattern = Pattern.compile("^.* 404 [0-9-]*$");
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                Pattern pattern = Pattern.compile("^.* 404 [0-9-]*$");
                 if (pattern.matcher(line).matches()) {
                     result.add(line);
                 }
