@@ -19,16 +19,17 @@ public class Config {
 
     public void load() {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            Pattern commentPattern = Pattern.compile("^#.*");
+            Pattern configPattern = Pattern.compile(".*[^\\s]=[^\\s].*");
+            Pattern equalPattern = Pattern.compile("=");
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                Pattern commentPattern = Pattern.compile("^#.*");
-                Pattern configPattern = Pattern.compile(".*[^\\s]=[^\\s].*");
+
                 if (line.isEmpty() || commentPattern.matcher(line).matches()) {
                     continue;
                 }
                 if (!configPattern.matcher(line).matches()) {
                     throw new IllegalArgumentException();
                 }
-                Pattern equalPattern = Pattern.compile("=");
                 String key = line.split(equalPattern.pattern())[0];
                 String value = line.split(equalPattern.pattern())[1];
                 values.put(key, value);
