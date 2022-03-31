@@ -23,7 +23,6 @@ public class Config {
             Pattern configPattern = Pattern.compile(".*[^\\s]=[^\\s].*");
             Pattern equalPattern = Pattern.compile("=");
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-
                 if (line.isEmpty() || commentPattern.matcher(line).matches()) {
                     continue;
                 }
