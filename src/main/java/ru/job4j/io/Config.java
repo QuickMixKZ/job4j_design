@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Config {
@@ -21,7 +22,7 @@ public class Config {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             Pattern commentPattern = Pattern.compile("^#.*");
             Pattern configPattern = Pattern.compile(".*[^\\s]=[^\\s].*");
-            Pattern equalPattern = Pattern.compile("=");
+            Pattern keyValuePattern = Pattern.compile("^(.*?)=(.*)$");
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 if (line.isEmpty() || commentPattern.matcher(line).matches()) {
                     continue;
@@ -29,8 +30,13 @@ public class Config {
                 if (!configPattern.matcher(line).matches()) {
                     throw new IllegalArgumentException();
                 }
-                String key = line.split(equalPattern.pattern())[0];
-                String value = line.split(equalPattern.pattern())[1];
+                Matcher matcher = keyValuePattern.matcher(line);
+                String key = null;
+                String value = null;
+                if (matcher.find()) {
+                    key = matcher.group(1);
+                    value = matcher.group(2);
+                }
                 values.put(key, value);
             }
         } catch (IOException e) {
