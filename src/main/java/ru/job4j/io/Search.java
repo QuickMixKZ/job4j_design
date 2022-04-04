@@ -1,5 +1,6 @@
 package ru.job4j.io;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +15,13 @@ public class Search {
         }
         String folder = args[0];
         String extension = args[1];
+        File folderFile = new File(folder);
+        if (!folderFile.exists() && !folderFile.isDirectory()) {
+            throw new IllegalArgumentException(String.format("There is no such directory - %s", folder));
+        }
+        if (!extension.startsWith(".")) {
+            throw new IllegalArgumentException(String.format("%s - are not extension.", folder));
+        }
         Path start = Paths.get(folder);
         search(start, p -> p.toFile().getName().endsWith(extension)).forEach(System.out::println);
     }
