@@ -1,6 +1,5 @@
 package ru.job4j.io.duplicates;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
