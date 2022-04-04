@@ -11,17 +11,20 @@ public class ArgsName {
 
     public String get(String key) {
         if (!values.containsKey(key)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Argument not found.");
         }
         return values.get(key);
     }
 
     private void parse(String[] args) {
-        Pattern argsPattern = Pattern.compile(".*[^\\s]=[^\\s].*");
+        if (args.length == 0) {
+            throw new IllegalArgumentException("No arguments passed.");
+        }
+        Pattern argsPattern = Pattern.compile("-.*[^\\s]=[^\\s].*");
         Pattern keyValuePattern = Pattern.compile("(\\w*?)=(.*)");
         for (String arg : args) {
             if (!argsPattern.matcher(arg).matches()) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Wrong argument's format.");
             }
             Matcher matcher = keyValuePattern.matcher(arg);
             String key = null;

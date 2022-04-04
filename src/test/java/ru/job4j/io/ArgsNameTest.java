@@ -36,4 +36,9 @@ public class ArgsNameTest {
         ArgsName jvm = ArgsName.of(new String[] {"-enconding=UTF-8", "-Xmx="});
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void whenWrongArgumentFormat() {
+        ArgsName jvm = ArgsName.of(new String[] {"encoding=UTF-8"});
+    }
+
 }
