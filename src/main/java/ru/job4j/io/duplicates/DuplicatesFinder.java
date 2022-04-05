@@ -9,8 +9,7 @@ import java.util.Map;
 public class DuplicatesFinder {
 
     private static void showDuplicates(Map<FileProperty, List<Path>> files) {
-        files.forEach((fileProperty, paths) -> paths.removeIf(path -> paths.size() < 2));
-        files.forEach((fileProperty, paths) -> paths.forEach(System.out::println));
+        files.forEach((fileProperty, paths) -> paths.stream().filter(path -> paths.size() > 1).forEach(System.out::println));
     }
 
     public static void main(String[] args) throws IOException {
