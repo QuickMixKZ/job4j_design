@@ -22,29 +22,32 @@ public class Zip {
         }
     }
 
-    public void packSingleFile(File source, File target) {
-        try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(target)))) {
-            zip.putNextEntry(new ZipEntry(source.getPath()));
-            try (BufferedInputStream out = new BufferedInputStream(new FileInputStream(source))) {
-                zip.write(out.readAllBytes());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public ArgsName validateArgs(String[] args) {
+        if (args.length != 3) {
+            throw new IllegalArgumentException("Wrong amount of arguments.");
         }
+        ArgsName argsName = ArgsName.of(args);
+        String directoryArg = argsName.get("d");
+        Path root = Paths.get(directoryArg);
+        if (!root.toFile().exists()) {
+            throw new IllegalArgumentException("Directory not found.");
+        }
+        String excludeArg = argsName.get("e");
+        if (!excludeArg.startsWith(".")) {
+            throw new IllegalArgumentException("Wrong format of \"exclude\" argument.");
+        }
+        return argsName;
     }
 
     public static void main(String[] args) throws IOException {
-        ArgsName argsName = ArgsName.of(args);
+        Zip zip = new Zip();
+        ArgsName argsName = zip.validateArgs(args);
         String directoryArg = argsName.get("d");
         String excludeArg = argsName.get("e");
         String outputArg = argsName.get("o");
         File outputFile = new File(outputArg);
         Path root = Paths.get(directoryArg);
-        if (!root.toFile().exists()) {
-            throw new IllegalArgumentException("Directory not found.");
-        }
         List<Path> sources = Search.search(root, path -> !path.endsWith(excludeArg));
-        Zip zip = new Zip();
         zip.packFiles(sources, outputFile);
     }
 }
