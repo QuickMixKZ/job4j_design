@@ -25,9 +25,9 @@ public class ConsoleChat {
         boolean pause = false;
         Scanner scanner = new Scanner(System.in);
         List<String> log = new ArrayList<>();
-        for (String userInput = scanner.next(); !userInput.equalsIgnoreCase(OUT); userInput = scanner.next()) {
+        for (String userInput = scanner.next(); !OUT.equalsIgnoreCase(userInput); userInput = scanner.next()) {
             log.add(userInput);
-            pause = pause ? !userInput.equalsIgnoreCase(CONTINUE) : userInput.equalsIgnoreCase(STOP);
+            pause = pause ? !CONTINUE.equalsIgnoreCase(userInput) : STOP.equalsIgnoreCase(userInput);
             if (pause) {
                 continue;
             }
