@@ -32,6 +32,7 @@ public class EchoServer {
                     if ("Hello".equalsIgnoreCase(msg)) {
                         answer = "HTTP/1.1 200 Hello\r\n\r\n";
                     } else if ("Exit".equalsIgnoreCase(msg)) {
+                        answer = "HTTP/1.1 200 OK\r\n\r\n";
                         server.close();
                     } else {
                         answer = "HTTP/1.1 200 What\r\n\r\n";
