@@ -2,7 +2,6 @@ package ru.job4j.io;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,14 +21,13 @@ public class EchoServer {
                 try (OutputStream out = socket.getOutputStream();
                      BufferedReader in = new BufferedReader(
                              new InputStreamReader(socket.getInputStream()))) {
-                    for (String str = in.readLine(); str != null && !str.isEmpty(); str = in.readLine()) {
+                        String str = in.readLine();
                         Matcher matcher = msgPattern.matcher(str);
                         if (matcher.find()) {
                             msg = matcher.group(1);
-                            break;
                         }
                         System.out.println(str);
-                    }
+                    
                     String answer = "";
                     if ("Hello".equalsIgnoreCase(msg)) {
                         answer = "HTTP/1.1 200 Hello\r\n\r\n";
