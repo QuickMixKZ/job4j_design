@@ -1,5 +1,8 @@
 package ru.job4j.io;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -7,7 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EchoServer {
-    public static void main(String[] args) throws IOException {
+
+    public static final Logger LOG = LoggerFactory.getLogger(EchoServer.class);
+
+    public static void main(String[] args) {
         Pattern msgPattern = Pattern.compile("[\\?|\\&]msg\\=([^&|\\s]+)");
         String msg = null;
         try (ServerSocket server = new ServerSocket(9000)) {
@@ -36,6 +42,8 @@ public class EchoServer {
                     out.flush();
                 }
             }
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
         }
     }
 }
