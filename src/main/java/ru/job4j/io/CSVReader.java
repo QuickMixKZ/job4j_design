@@ -20,6 +20,18 @@ public class CSVReader {
         return argsName;
     }
 
+    private static void printResult(List<String> result, String outOption) {
+        if (STDOUT.equals(outOption)) {
+            result.forEach(System.out::println);
+        } else {
+            try (PrintWriter printWriter = new PrintWriter(outOption)) {
+                result.forEach(printWriter::println);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void handle(ArgsName argsName) throws IOException {
         String path = argsName.get("path");
         String delimiter = argsName.get("delimiter");
@@ -43,15 +55,7 @@ public class CSVReader {
                 }
                 result.add(resultLine.deleteCharAt(resultLine.length() - 1).toString());
             }
-            if (STDOUT.equals(out)) {
-                result.forEach(System.out::println);
-            } else {
-                try (PrintWriter printWriter = new PrintWriter(out)) {
-                    result.forEach(printWriter::println);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            printResult(result, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
