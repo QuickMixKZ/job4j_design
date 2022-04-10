@@ -22,4 +22,8 @@ public class DogHandler {
                 + "name='" + name + '\''
                 + '}';
     }
+
+    public String getName() {
+        return name;
+    }
 }

@@ -63,4 +63,24 @@ public class Dog {
         Dog dogFromJson = gson.fromJson(jsonDog, Dog.class);
         System.out.println(dogFromJson);
     }
+
+    public boolean isVaccinated() {
+        return vaccinated;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public DogHandler getHandler() {
+        return handler;
+    }
+
+    public Dog[] getChildren() {
+        return children;
+    }
 }
