@@ -4,12 +4,26 @@ import java.util.Arrays;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import javax.xml.bind.annotation.*;
+
+@XmlRootElement(name = "dog")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Dog {
+    @XmlAttribute
     boolean vaccinated;
+    @XmlAttribute
     int age;
+    @XmlAttribute
     String name;
+    @XmlElement
     DogHandler handler;
+    @XmlElementWrapper(name = "children")
+    @XmlElement(name = "child")
     Dog[] children;
+
+    public Dog() {
+
+    }
 
     public Dog(boolean vaccinated, int age, String name, DogHandler handler, Dog[] children) {
         this.vaccinated = vaccinated;
