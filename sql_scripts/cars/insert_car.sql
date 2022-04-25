@@ -1,1 +1,0 @@
-insert into cars (brand, max_speed, electro) values('BMW', 320, true);
