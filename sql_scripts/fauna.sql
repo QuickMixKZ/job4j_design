@@ -40,4 +40,4 @@ SELECT
 FROM
 	fauna
 WHERE
-	descovery_date IS NULL;
+	discovery_date IS NULL;
