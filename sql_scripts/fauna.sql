@@ -11,7 +11,8 @@ VALUES
 	('jellyfish', 15000, '1938.03.05'),
 	('catfish', 8000, '1999.12.31'),
 	('dog', 22000, '1912.11.15'),
-	('cat', 12000, '1963.07.24');
+	('cat', 12000, '1963.07.24'),
+	('elephant', 100000, NULL);
 
 SELECT
 	*
@@ -33,3 +34,10 @@ FROM
 	fauna
 WHERE
 	EXTRACT(YEAR FROM discovery_date) < 1950;
+
+SELECT
+	*
+FROM
+	fauna
+WHERE
+	descovery_date IS NULL;
