@@ -4,6 +4,7 @@ import ru.job4j.io.Config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 import java.util.StringJoiner;
@@ -27,34 +28,37 @@ public class TableEditor implements AutoCloseable {
         connection = DriverManager.getConnection(url, login, password);
     }
 
-    public void createTable(String tableName) throws SQLException {
+    public void createTable(String tableName) {
         String query = String.format("CREATE TABLE %s()", tableName);
         executeUpdate(query);
     }
 
-    public void dropTable(String tableName) throws SQLException {
+    public void dropTable(String tableName) {
         String query = String.format("DROP TABLE %s", tableName);
         executeUpdate(query);
     }
 
-    public void addColumn(String tableName, String columnName, String type) throws SQLException {
+    public void addColumn(String tableName, String columnName, String type) {
         String query = String.format("ALTER TABLE %s ADD COLUMN %s %s", tableName, columnName, type);
         executeUpdate(query);
     }
 
-    public void dropColumn(String tableName, String columnName) throws SQLException {
+    public void dropColumn(String tableName, String columnName) {
         String query = String.format("ALTER TABLE %s DROP COLUMN %s", tableName, columnName);
         executeUpdate(query);
     }
 
-    public void renameColumn(String tableName, String columnName, String newColumnName) throws SQLException {
+    public void renameColumn(String tableName, String columnName, String newColumnName) {
         String query = String.format("ALTER TABLE %s RENAME COLUMN %s TO %s", tableName, columnName, newColumnName);
         executeUpdate(query);
     }
 
-    public void executeUpdate(String query) throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(query);
+    public void executeUpdate(String query) {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -78,10 +82,10 @@ public class TableEditor implements AutoCloseable {
     }
 
     public static void main(String[] args) {
-        try (FileInputStream fileInputStream = new FileInputStream("app.properties")) {
-            Properties properties = new Properties();
-            properties.load(fileInputStream);
-            try (TableEditor tableEditor = new TableEditor(properties)) {
+        Properties config = new Properties();
+        try (InputStream in = TableEditor.class.getClassLoader().getResourceAsStream("app.properties")) {
+            config.load(in);
+            try (TableEditor tableEditor = new TableEditor(config)) {
                 tableEditor.createTable("test");
                 System.out.println("Create table:");
                 System.out.println(getTableScheme(tableEditor.connection, "test"));
