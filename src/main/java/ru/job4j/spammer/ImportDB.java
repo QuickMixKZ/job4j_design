@@ -22,7 +22,13 @@ public class ImportDB {
     public List<User> load() throws IOException {
         List<User> users = new ArrayList<>();
         try (BufferedReader rd = new BufferedReader(new FileReader(dump))) {
-           rd.lines().forEach(s -> users.add(new User(s.split(";")[0], s.split(";")[1])));
+            rd.lines().forEach(s -> {
+                String[] split = s.split(";");
+                if (split.length != 2 || (split[0].isEmpty() || split[1].isEmpty())) {
+                    throw new IllegalArgumentException(String.format("Wrong data's format at line - %s", s));
+                }
+                users.add(new User(split[0], split[1]));
+            });
         }
         return users;
     }
