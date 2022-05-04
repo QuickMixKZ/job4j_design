@@ -29,6 +29,8 @@ public class ImportDB {
                 }
                 users.add(new User(split[0], split[1]));
             });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return users;
     }
