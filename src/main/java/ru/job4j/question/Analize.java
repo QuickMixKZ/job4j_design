@@ -13,8 +13,8 @@ public class Analize {
         current.forEach(user -> union.put(user, user.getId()));
         Set<Integer> ids = new HashSet<>(union.values());
         int changed = union.size() - ids.size();
-        int added = union.size() - previous.size() - changed;
-        int deleted = union.size() - current.size() - changed;
+        int added = ids.size() - previous.size();
+        int deleted = ids.size() - current.size();
         return new Info(added, changed, deleted);
     }
 
