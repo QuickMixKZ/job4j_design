@@ -1,0 +1,59 @@
+
+2. Создать несколько объектов User и руками рассчитать сколько они будет занимать памяти.
+
+User user = new User();
+12 bytes - заголовок
+4 bytes - age(типа int)
+4 bytes - ссылка name
+Итого = 20 bytes + 4 bytes для кратности 8 = 24 b
+
+User user1 = new User(28);
+= 24 b, т.к. вне зависимости от того, проинициализирована ли переменная age, она всегда занимает 4 b, как и в прошлом примере
+
+User user2 = new User("Mikhail");
+12 bytes - заголовок
+4 bytes - age
+4 bytes - ссылка name
+48 bytes - значение ссылки name(
+    12 bytes - заголовок
+    byte code - 1 byte
+    int hash - 4 bytes
+    byte[] value(ссылка на массив) - 4 bytes
+    = 21 bytes + 3 bytes для кратности = 24 bytes
+    24 bytes - значение value (
+        12 bytes - заголовок
+        int length - 4 bytes длинна массива
+        7 * 1 - 7 bytes для каждого символа
+        = 24 bytes
+    )
+    24 + 24 = 48 bytes
+)
+    = 68 b + 4 b для кратности 8 = 72 b
+
+User user3 = new User("(Mikhail)");
+ 12 bytes - заголовок
+ 4 b - age
+ 4 b - ссылка name
+ 56 b - name(
+    12 bytes - заголовок
+        byte code - 1 byte
+        int hash - 4 bytes
+        byte[] value(ссылка на массив) - 4 bytes
+        = 21 bytes + 3 bytes для кратности = 24 bytes
+        32 bytes - значение value (
+                12 bytes - заголовок
+                int length - 4 bytes длинна массива
+                9 * 1 - 9 bytes для каждого символа
+                = 25 bytes + 7 bytes для кратности = 32 bytes
+            )
+ ) 32 bytes + 24 bytes = 56 bytes
+ = 76 b + 4 b для кратности 8 = 80 b
+
+ 4. Добиться состояния, когда виртуальная машины вызывает сборщик мусора самостоятельно. За счет ключей xmx.
+ 5. Объяснить поведение программы в текстовом файле.
+
+ При установке -Xmx3m при создании 500 объектов без ссылок, после создания ~450 объектов, область Eden заполняется, и выполняется
+ minor GC. Т.к. все объекты в области eden без ссылок, все они помечаются как Unreferenced, после чего удаляются из памяти.
+ Добавил задержку в 1 миллисекунду, т.к. без неё, если создавать небольшое кол-во объектов, GC не успевает выполниться.
+ А если создавать много объектов, то программа завершается в ошибкой:
+ Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "main"
