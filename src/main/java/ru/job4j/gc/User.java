@@ -2,8 +2,8 @@ package ru.job4j.gc;
 
 public class User {
 
-    String name;
-    int age;
+    private String name;
+    private int age;
 
     public User(String name) {
         this.name = name;
