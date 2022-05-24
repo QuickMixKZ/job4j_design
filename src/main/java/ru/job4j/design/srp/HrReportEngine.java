@@ -15,14 +15,12 @@ public class HrReportEngine implements Report {
     @Override
     public String generate(Predicate<Employee> filter) {
         StringBuilder text = new StringBuilder();
-        text.append("Name; Hired; Fired; Salary;");
+        text.append("Name; Salary;");
         text.append(System.lineSeparator());
         List<Employee> employees = store.findBy(filter);
         Collections.sort(employees, (o1, o2) -> Double.compare(o2.getSalary(), o1.getSalary()));
         for (Employee employee : employees) {
             text.append(employee.getName()).append(";")
-                    .append(employee.getHired()).append(";")
-                    .append(employee.getFired()).append(";")
                     .append(employee.getSalary()).append(";")
                     .append(System.lineSeparator());
         }
