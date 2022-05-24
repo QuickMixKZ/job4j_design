@@ -4,6 +4,8 @@ import java.util.function.Predicate;
 
 public class AccountingReportEngine implements Report {
 
+    public static final float RATE = 1.15f;
+
     private Store store;
 
     public AccountingReportEngine(Store store) {
@@ -26,6 +28,6 @@ public class AccountingReportEngine implements Report {
     }
 
     private double getSalary(Employee e) {
-        return e.getSalary() * 1.15;
+        return e.getSalary() * RATE;
     }
 }
