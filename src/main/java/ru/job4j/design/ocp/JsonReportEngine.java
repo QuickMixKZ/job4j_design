@@ -6,8 +6,8 @@ import ru.job4j.design.srp.Employee;
 import ru.job4j.design.srp.Report;
 import ru.job4j.design.srp.Store;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.function.Predicate;
 
 public class JsonReportEngine implements Report {
@@ -20,8 +20,12 @@ public class JsonReportEngine implements Report {
 
     @Override
     public String generate(Predicate<Employee> filter) {
-        List<Employee> employees = new ArrayList<>(store.findBy(filter));
-        Gson lib = new GsonBuilder().create();
-        return lib.toJson(employees);
+        Employees employees = new Employees();
+        employees.setEmployees(store.findBy(filter));
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Calendar.class, new CalendarAdapterJson());
+        builder.registerTypeAdapter(GregorianCalendar.class, new CalendarAdapterJson());
+        Gson gson = builder.create();
+        return gson.toJson(employees);
     }
 }

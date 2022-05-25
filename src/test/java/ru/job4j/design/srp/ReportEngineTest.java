@@ -4,21 +4,12 @@ import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static ru.job4j.design.srp.AccountingReportEngine.RATE;
 
-import com.google.gson.GsonBuilder;
 import org.junit.Test;
-import ru.job4j.design.ocp.Employees;
 import ru.job4j.design.ocp.JsonReportEngine;
 import ru.job4j.design.ocp.XMLReportEngine;
-
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ReportEngineTest {
 
@@ -110,35 +101,44 @@ public class ReportEngineTest {
     public void whenJsonGenerated() {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss X");
+        String dateString = formatter.format(now.getTime());
         Employee worker = new Employee("Petr", now, now, 50);
         Employee worker1 = new Employee("Ivan", now, now, 100);
         store.add(worker);
         store.add(worker1);
         Report engine = new JsonReportEngine(store);
-        String expect = new GsonBuilder().create().toJson(List.of(worker, worker1));
-        assertThat(engine.generate(em -> true), is(expect));
+        String template = "{\"name\":\"%s\",\"hired\":\"%s\",\"fired\":\"%s\",\"salary\":%.1f}";
+        String expect = "{\"employees\":[" +
+                String.format(Locale.US, template + ",", worker.getName(), dateString, dateString, worker.getSalary()) +
+                String.format(Locale.US, template, worker1.getName(), dateString, dateString, worker1.getSalary()) +
+                "]}";
+        String actual = engine.generate(em -> true);
+        assertThat(actual, is(expect));
     }
 
     @Test
     public void whenXMLGenerated() throws JAXBException {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss X");
+        String dateString = formatter.format(now.getTime());
         Employee worker = new Employee("Petr", now, now, 50);
         Employee worker1 = new Employee("Ivan", now, now, 100);
         store.add(worker);
         store.add(worker1);
         Report engine = new XMLReportEngine(store);
-        JAXBContext context = JAXBContext.newInstance(Employees.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        List<Employee> employees = List.of(worker, worker1);
-        String expect = "";
-        try (StringWriter writer = new StringWriter()) {
-            marshaller.marshal(new Employees(employees), writer);
-            expect = writer.getBuffer().toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assertThat(engine.generate(em -> true), is(expect));
+        String actual = engine.generate(em -> true);
+        String template =
+                "    <employee name=\"%s\" hired=\"%s\" fired=\"%s\" salary=\"%.1f\"/>\n";
+        StringBuilder expect = new StringBuilder()
+                .append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n")
+                .append("<employees>\n")
+                .append(String.format(Locale.US, template,
+                        worker.getName(), dateString, dateString, worker.getSalary()))
+                .append(String.format(Locale.US, template,
+                        worker1.getName(), dateString, dateString, worker1.getSalary()))
+                .append("</employees>\n");
+        assertThat(actual, is(expect.toString()));
     }
 }
