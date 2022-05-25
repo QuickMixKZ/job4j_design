@@ -109,12 +109,13 @@ public class ReportEngineTest {
         store.add(worker1);
         Report engine = new JsonReportEngine(store);
         String template = "{\"name\":\"%s\",\"hired\":\"%s\",\"fired\":\"%s\",\"salary\":%.1f}";
-        String expect = "{\"employees\":[" +
-                String.format(Locale.US, template + ",", worker.getName(), dateString, dateString, worker.getSalary()) +
-                String.format(Locale.US, template, worker1.getName(), dateString, dateString, worker1.getSalary()) +
-                "]}";
+        StringBuilder expect = new StringBuilder()
+                .append("{\"employees\":[")
+                .append(String.format(Locale.US, template + ",", worker.getName(), dateString, dateString, worker.getSalary()))
+                .append(String.format(Locale.US, template, worker1.getName(), dateString, dateString, worker1.getSalary()))
+                .append("]}");
         String actual = engine.generate(em -> true);
-        assertThat(actual, is(expect));
+        assertThat(actual, is(expect.toString()));
     }
 
     @Test
