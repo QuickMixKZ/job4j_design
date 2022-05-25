@@ -4,8 +4,21 @@ import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static ru.job4j.design.srp.AccountingReportEngine.RATE;
 
+import com.google.gson.GsonBuilder;
 import org.junit.Test;
+import ru.job4j.design.ocp.Employees;
+import ru.job4j.design.ocp.JsonReportEngine;
+import ru.job4j.design.ocp.XMLReportEngine;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 public class ReportEngineTest {
 
@@ -91,5 +104,41 @@ public class ReportEngineTest {
                 .append("</b>")
                 .append("</body>");
         assertThat(engine.generate(em -> true), is(expect.toString()));
+    }
+
+    @Test
+    public void whenJsonGenerated() {
+        MemStore store = new MemStore();
+        Calendar now = Calendar.getInstance();
+        Employee worker = new Employee("Petr", now, now, 50);
+        Employee worker1 = new Employee("Ivan", now, now, 100);
+        store.add(worker);
+        store.add(worker1);
+        Report engine = new JsonReportEngine(store);
+        String expect = new GsonBuilder().create().toJson(List.of(worker, worker1));
+        assertThat(engine.generate(em -> true), is(expect));
+    }
+
+    @Test
+    public void whenXMLGenerated() throws JAXBException {
+        MemStore store = new MemStore();
+        Calendar now = Calendar.getInstance();
+        Employee worker = new Employee("Petr", now, now, 50);
+        Employee worker1 = new Employee("Ivan", now, now, 100);
+        store.add(worker);
+        store.add(worker1);
+        Report engine = new XMLReportEngine(store);
+        JAXBContext context = JAXBContext.newInstance(Employees.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        List<Employee> employees = List.of(worker, worker1);
+        String expect = "";
+        try (StringWriter writer = new StringWriter()) {
+            marshaller.marshal(new Employees(employees), writer);
+            expect = writer.getBuffer().toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assertThat(engine.generate(em -> true), is(expect));
     }
 }
