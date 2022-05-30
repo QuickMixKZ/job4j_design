@@ -9,7 +9,7 @@ public class Warehouse implements Storage {
 
     @Override
     public boolean accept(Food food) {
-        return food.getUsage() < 25;
+        return getUsage(food) < 25;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class Warehouse implements Storage {
     }
 
     public List<Food> getFoodList() {
-        return foodList;
+        return new ArrayList<>(foodList);
     }
 
 }

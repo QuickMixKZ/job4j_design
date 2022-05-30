@@ -9,7 +9,7 @@ public class Trash implements Storage {
 
     @Override
     public boolean accept(Food food) {
-        return food.getUsage() == 100;
+        return getUsage(food) == 100;
     }
 
     @Override
@@ -22,6 +22,6 @@ public class Trash implements Storage {
     }
 
     public List<Food> getFoodList() {
-        return foodList;
+        return new ArrayList<>(foodList);
     }
 }

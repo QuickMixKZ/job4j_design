@@ -9,15 +9,16 @@ public class Shop implements Storage {
 
     @Override
     public boolean accept(Food food) {
-        return food.getUsage() >= 25 && food.getUsage() < 100;
+        int usage = getUsage(food);
+        return usage >= 25 && usage < 100;
     }
 
     @Override
     public boolean add(Food food) {
         boolean result = accept(food);
         if (result) {
-            if (food.getUsage() >= 75) {
-                food.setDiscount(10.0);
+            if (getUsage(food) >= 75) {
+                setDiscountedPrice(food);
             }
             foodList.add(food);
         }
@@ -25,7 +26,16 @@ public class Shop implements Storage {
     }
 
     public List<Food> getFoodList() {
-        return foodList;
+        return new ArrayList<>(foodList);
+    }
+
+    private void setDiscountedPrice(Food food) {
+        double oldPrice = food.getPrice();
+        double discount = food.getDiscount();
+        if (discount != 0) {
+            double newPrice = oldPrice - oldPrice * (discount / 100);
+            food.setPrice(newPrice);
+        }
     }
 
 }

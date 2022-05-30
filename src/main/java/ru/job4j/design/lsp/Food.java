@@ -60,12 +60,6 @@ public abstract class Food {
         this.discount = discount;
     }
 
-    public int getUsage() {
-        double totalDays = (double) ChronoUnit.DAYS.between(createDate, expiryDate);
-        int remainDays = (int) ChronoUnit.DAYS.between(LocalDate.now(), expiryDate);
-        return Math.min((int) ((totalDays - remainDays) / totalDays * 100), 100);
-    }
-
     @Override
     public String toString() {
         return "Food{"
