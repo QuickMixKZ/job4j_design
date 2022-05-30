@@ -22,7 +22,7 @@ public class ControlQualityTest {
         ControlQuality controlQuality = new ControlQuality(storages);
         List<Food> food = new ArrayList<>();
         Food milk = new Milk("Простоквашино", LocalDate.now().plusDays(3623), LocalDate.now().minusDays(3), 500, 0);
-        Food bread = new Bread("Простой хлеб", LocalDate.now().plusDays(2892),LocalDate.now().minusDays(3), 40, 0);
+        Food bread = new Bread("Простой хлеб", LocalDate.now().plusDays(2892), LocalDate.now().minusDays(3), 40, 0);
         Food simpleWater = new Water("Прозрачная вода", LocalDate.now().plusDays(10258), LocalDate.now().minusDays(5), 100, 0);
         Food mineralWater = new Water("Минеральная вода",  LocalDate.now().plusDays(4256), LocalDate.now().minusDays(7), 150, 0);
         food.add(milk);
