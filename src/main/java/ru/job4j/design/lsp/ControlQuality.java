@@ -11,7 +11,8 @@ public class ControlQuality {
     public void sortProducts(List<Food> foodList) {
         for (Food food : foodList) {
             for (Storage storage : storages) {
-                if (storage.add(food)) {
+                if (storage.accept(food)) {
+                    storage.add(food);
                     break;
                 }
             }
