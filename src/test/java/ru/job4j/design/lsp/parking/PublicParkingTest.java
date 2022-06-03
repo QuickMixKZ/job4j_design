@@ -12,8 +12,8 @@ public class PublicParkingTest {
         Car passengerCar = new PassengerCar();
         Car passengerCar1 = new PassengerCar();
         Car passengerCar2 = new PassengerCar();
-        Car truck = new Truck();
-        Car truck1 = new Truck();
+        Car truck = new Truck(2);
+        Car truck1 = new Truck(2);
         assertTrue(parking.parkCar(passengerCar));
         assertTrue(parking.parkCar(passengerCar1));
         assertTrue(parking.parkCar(truck));
@@ -26,8 +26,8 @@ public class PublicParkingTest {
         Parking parking = new PublicParking(5, 0);
         Car passengerCar = new PassengerCar();
         Car passengerCar1 = new PassengerCar();
-        Car truck = new Truck();
-        Car truck1 = new Truck();
+        Car truck = new Truck(2);
+        Car truck1 = new Truck(2);
         assertTrue(parking.parkCar(truck));
         assertTrue(parking.parkCar(truck1));
         assertTrue(parking.parkCar(passengerCar));
@@ -39,8 +39,8 @@ public class PublicParkingTest {
         Parking parking = new PublicParking(0, 0);
         Car passengerCar = new PassengerCar();
         Car passengerCar1 = new PassengerCar();
-        Car truck = new Truck();
-        Car truck1 = new Truck();
+        Car truck = new Truck(2);
+        Car truck1 = new Truck(2);
         assertFalse(parking.parkCar(truck));
         assertFalse(parking.parkCar(truck1));
         assertFalse(parking.parkCar(passengerCar));
@@ -51,8 +51,8 @@ public class PublicParkingTest {
     public void whenParkedMonsterTruckAndTruck() {
         Parking parking = new PublicParking(2, 1);
         Car passengerCar = new PassengerCar();
-        Car truck = new Truck();
-        Car monsterTruck = new MonsterTruck();
+        Car truck = new Truck(2);
+        Car monsterTruck = new Truck(10);
         assertTrue(parking.parkCar(monsterTruck));
         assertTrue(parking.parkCar(truck));
         assertFalse(parking.parkCar(passengerCar));

@@ -3,6 +3,8 @@ package ru.job4j.design.lsp.parking;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.job4j.design.lsp.parking.PassengerCar.PASSENGER_SIZE;
+
 public class PublicParking implements Parking {
 
     private int passengerCarSpace;
@@ -19,17 +21,15 @@ public class PublicParking implements Parking {
     public boolean isFreeSpace(Car car) {
         boolean result = false;
         int carSize = car.getSize();
-        if (carSize == 1 && passengerCarSpace != 0) {
+        if (carSize == PASSENGER_SIZE && passengerCarSpace >= PASSENGER_SIZE) {
             result = true;
             --passengerCarSpace;
-        } else {
-            if (truckSpace != 0) {
+        } else if (carSize > PASSENGER_SIZE && truckSpace != 0) {
                 result = true;
                 --truckSpace;
-            } else if (passengerCarSpace >= carSize) {
+        } else if (carSize > PASSENGER_SIZE && passengerCarSpace >= carSize) {
                 result = true;
                 passengerCarSpace -= carSize;
-            }
         }
         return result;
     }
