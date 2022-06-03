@@ -10,6 +10,7 @@ public class PublicParking implements Parking {
     private int passengerCarSpace;
     private int truckSpace;
     private final List<Car> storage;
+    private static final int ZERO = 0;
 
     public PublicParking(int passengerCarSpace, int truckSpace) {
         this.passengerCarSpace = passengerCarSpace;
@@ -24,7 +25,7 @@ public class PublicParking implements Parking {
         if (carSize == PASSENGER_SIZE && passengerCarSpace >= PASSENGER_SIZE) {
             result = true;
             --passengerCarSpace;
-        } else if (carSize > PASSENGER_SIZE && truckSpace != 0) {
+        } else if (carSize > PASSENGER_SIZE && truckSpace != ZERO) {
                 result = true;
                 --truckSpace;
         } else if (carSize > PASSENGER_SIZE && passengerCarSpace >= carSize) {
