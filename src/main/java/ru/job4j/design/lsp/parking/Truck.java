@@ -1,14 +1,14 @@
 package ru.job4j.design.lsp.parking;
 
 
-public class Truck implements Car {
+import static ru.job4j.design.lsp.parking.PassengerCar.PASSENGER_SIZE;
 
-    public static final int MIN_SIZE = 2;
+public class Truck implements Car {
 
     private int size;
 
     public Truck(int size) {
-        if (size < MIN_SIZE) {
+        if (size <= PASSENGER_SIZE) {
             throw new IllegalArgumentException();
         }
         this.size = size;
