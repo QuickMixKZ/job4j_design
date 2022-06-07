@@ -135,4 +135,40 @@ public class ControlQualityTest {
         assertEquals(List.of(mineralWater), trash.getFoodList());
     }
 
+    @Test
+    public void whenSortedToEachStorageAndResortedToTrash() {
+        Storage warehouse = new Warehouse();
+        Storage shop = new Shop();
+        Storage trash = new Trash();
+        List<Storage> storages = new ArrayList<>();
+        storages.add(warehouse);
+        storages.add(shop);
+        storages.add(trash);
+        ControlQuality controlQuality = new ControlQuality(storages);
+        List<Food> food = new ArrayList<>();
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        Food milk = new Milk("Простоквашино", LocalDate.now().plusDays(3623), LocalDate.now().minusDays(3), 500, 0);
+        Food bread = new Bread("Простой хлеб", LocalDate.now().plusDays(44), LocalDate.now().minusDays(30), 40, 0);
+        Food simpleWater = new Water("Прозрачная вода", LocalDate.now().plusDays(1), LocalDate.now().minusDays(25), 100, 20);
+        Food mineralWater = new Water("Минеральная вода", yesterday, LocalDate.now().minusDays(2), 150, 0);
+        Food discountedSimpleWater = new Water("Прозрачная вода", LocalDate.now().plusDays(1), LocalDate.now().minusDays(25), 80, 20);
+        food.add(milk);
+        food.add(bread);
+        food.add(simpleWater);
+        food.add(mineralWater);
+        controlQuality.sortProducts(food);
+        assertEquals(List.of(milk), warehouse.getFoodList());
+        assertEquals(List.of(bread, discountedSimpleWater), shop.getFoodList());
+        assertEquals(List.of(mineralWater), trash.getFoodList());
+        milk.setExpiryDate(yesterday);
+        bread.setExpiryDate(yesterday);
+        discountedSimpleWater.setExpiryDate(yesterday);
+        simpleWater.setExpiryDate(yesterday);
+        mineralWater.setExpiryDate(yesterday);
+        controlQuality.resort();
+        assertEquals(List.of(), warehouse.getFoodList());
+        assertEquals(List.of(), shop.getFoodList());
+        assertEquals(List.of(milk, bread, discountedSimpleWater, mineralWater), trash.getFoodList());
+    }
+
 }

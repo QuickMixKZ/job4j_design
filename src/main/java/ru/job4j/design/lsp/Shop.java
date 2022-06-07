@@ -25,8 +25,16 @@ public class Shop implements Storage {
         return result;
     }
 
+    @Override
     public List<Food> getFoodList() {
         return new ArrayList<>(foodList);
+    }
+
+    @Override
+    public List<Food> removeFood() {
+        List<Food> newFoodList = getFoodList();
+        foodList.removeAll(newFoodList);
+        return newFoodList;
     }
 
     private void setDiscountedPrice(Food food) {

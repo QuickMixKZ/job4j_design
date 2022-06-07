@@ -13,6 +13,8 @@ public interface Storage {
 
     List<Food> getFoodList();
 
+    List<Food> removeFood();
+
     default public int getUsage(Food food) {
         double totalDays = (double) ChronoUnit.DAYS.between(food.getCreateDate(), food.getExpiryDate());
         int remainDays = (int) ChronoUnit.DAYS.between(LocalDate.now(), food.getExpiryDate());
