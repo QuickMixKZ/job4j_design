@@ -1,16 +1,11 @@
 SELECT
-	name
-FROM
-	person
-WHERE
-	company_id != 5;
-
-SELECT
 	p.name AS person_name,
 	c.name AS company_name
 FROM
 	person AS p
-	LEFT JOIN company AS c ON p.company_id = c.id;
+	LEFT JOIN company AS c ON p.company_id = c.id
+WHERE
+    p.company_id != 5;
 
 SELECT
 	c.name AS company,
