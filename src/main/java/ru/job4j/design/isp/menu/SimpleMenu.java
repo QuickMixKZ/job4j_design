@@ -8,11 +8,12 @@ public class SimpleMenu implements Menu {
 
     @Override
     public boolean add(String parentName, String childName, ActionDelegate actionDelegate) {
-        boolean result;
-        if (Objects.equals(parentName, ROOT) && findItem(childName).isEmpty()) {
+        boolean result = false;
+        boolean isEmpty = findItem(childName).isEmpty();
+        if (Objects.equals(parentName, ROOT) && isEmpty) {
             rootElements.add(new SimpleMenuItem(childName, actionDelegate));
             result = true;
-        } else {
+        } else if (isEmpty) {
             Optional<ItemInfo> parentItem = findItem(parentName);
             result = parentItem.isPresent();
             MenuItem menuItem;
@@ -27,15 +28,7 @@ public class SimpleMenu implements Menu {
 
     @Override
     public Optional<MenuItemInfo> select(String itemName) {
-        Optional<MenuItemInfo> result = Optional.empty();
-        Optional<ItemInfo> optionalItemInfo = findItem(itemName);
-        if (optionalItemInfo.isPresent()) {
-            ItemInfo itemInfo = optionalItemInfo.get();
-            MenuItemInfo menuItemInfo = new MenuItemInfo(itemInfo.menuItem, itemInfo.number);
-            result = Optional.of(menuItemInfo);
-        }
-
-        return result;
+        return findItem(itemName).map(itemInfo -> new MenuItemInfo(itemInfo.menuItem, itemInfo.number));
     }
 
     @Override
@@ -51,9 +44,6 @@ public class SimpleMenu implements Menu {
 
             @Override
             public MenuItemInfo next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
                 ItemInfo itemInfo = dfsIterator.next();
                 return new MenuItemInfo(itemInfo.menuItem, itemInfo.number);
             }
