@@ -11,7 +11,7 @@ public class ArgsName {
 
     public String get(String key) {
         if (!values.containsKey(key)) {
-            throw new IllegalArgumentException("Argument not found.");
+            throw new IllegalArgumentException(String.format("Argument not found - %s", key));
         }
         return values.get(key);
     }
