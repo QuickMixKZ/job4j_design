@@ -14,14 +14,11 @@ public abstract class AbstractCache<K, V> {
 
     public V get(K key) {
         V result;
-        SoftReference<V> softReference = cache.get(key);
-        if (softReference == null) {
-            throw new IllegalArgumentException("No such key in map.");
-        }
+        SoftReference<V> softReference = cache.getOrDefault(key, new SoftReference<>(null));
         result  = softReference.get();
         if (result == null) {
             result = load(key);
-            cache.put(key, new SoftReference<>(result));
+            put(key, result);
         }
         return result;
     }
